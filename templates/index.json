@@ -1,8 +1,83 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
-      "type": "section-slideshow"
+      "type": "section-slideshow",
+      "blocks": {
+        "image_NQzwmE": {
+          "type": "Image",
+          "settings": {
+            "image_landscape": "shopify://shop_images/hero.jpg",
+            "show_overlay": false,
+            "subheading": "Domaine",
+            "heading": "<p>We're purpose-built for <br/>ambitious & beloved brands.</p>",
+            "body": "",
+            "button_text_1": "Learn More",
+            "button_url_1": "/",
+            "button_text_2": "",
+            "button_url_2": ""
+          }
+        },
+        "image_niJH9G": {
+          "type": "Image",
+          "settings": {
+            "image_landscape": "shopify://shop_images/Screenshot_2025-03-12_at_6.51.37_AM.png",
+            "show_overlay": false,
+            "subheading": "Domaine",
+            "heading": "<p>The one-stop shop for <br/>tech and everything else Shopify.</p>",
+            "body": "",
+            "button_text_1": "Learn More",
+            "button_url_1": "/",
+            "button_text_2": "",
+            "button_url_2": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_NQzwmE",
+        "image_niJH9G"
+      ],
+      "settings": {
+        "autoplay_check": true,
+        "loop_check": true
+      }
+    },
+    "section_product_carousel_A7VCkb": {
+      "type": "section-product-carousel",
+      "settings": {
+        "product_card_mode": "variants",
+        "limit": 15,
+        "collection": "variants-colorways",
+        "subheading": "Solution 1",
+        "heading": "Variant Colorways",
+        "cta_title": "Shop Now",
+        "cta_url": ""
+      }
+    },
+    "section_product_carousel_4cpTP4": {
+      "type": "section-product-carousel",
+      "settings": {
+        "product_card_mode": "products",
+        "limit": 15,
+        "collection": "product-colorways",
+        "subheading": "Solution 2",
+        "heading": "Product Colorways",
+        "cta_title": "Shop Now",
+        "cta_url": ""
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main",
+    "section_product_carousel_A7VCkb",
+    "section_product_carousel_4cpTP4"
+  ]
 }
