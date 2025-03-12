@@ -9,7 +9,7 @@
         {%- endfor -%}
       {%- endcapture -%}
 
-      {{ srcset | strip }}
+      {{- srcset | strip -}}
     {%- endif -%}
 
   {%- when 'swatch-bg' -%}
@@ -21,6 +21,6 @@
       {%- elsif swatch.color -%}
         {%- assign swatch_bg = swatch.color -%}
       {%- endif -%}
-      {{ swatch_bg }}
+      {{- swatch_bg | strip -}}
     {%- endif -%}
 {%- endcase -%}
