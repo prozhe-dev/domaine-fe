@@ -7,19 +7,24 @@ interface VariantSwatchOption extends HTMLButtonElement {
   };
 }
 
+interface ImageData {
+  src: string;
+  alt: string;
+}
+
 window.customElements.define(
   "wc-product-card-variants",
   class WCProductCardVariants extends HTMLElement {
-    constructor() {
-      super();
-      this.onSwatchChange = this.onSwatchChange.bind(this);
-    }
-
     swatchBtns: NodeListOf<HTMLButtonElement> | null = null;
     imgPrimary: HTMLImageElement | null = null;
     imgSecondary: HTMLImageElement | null = null;
     activeSwatchId: string | null = null;
     widths: string[] = [];
+
+    constructor() {
+      super();
+      this.onSwatchChange = this.onSwatchChange.bind(this);
+    }
 
     /* -------------------------------- LIFECYCLE ------------------------------- */
     disconnectedCallback() {
@@ -63,21 +68,18 @@ window.customElements.define(
       });
 
       // Parse the images string into an array of objects
-      const images = window.Utils.parseJSON(imagesStr ?? "[]");
+      const images = window.Utils.parseJSON(imagesStr ?? "[]") as ImageData[];
 
-      // Update the primary image
-      if (this.imgPrimary) {
-        this.imgPrimary.src = images[0] ? window.Utils.resizeImage(images[0].src, "100x") : "";
-        this.imgPrimary.srcset = images[0] ? window.Utils.generateImgSrcset(images[0].src, this.widths) : "";
-        this.imgPrimary.alt = images[0]?.alt ?? "";
-      }
+      // Update both images
+      !!images[0] && this.updateImage(this.imgPrimary, images[0]);
+      !!images[1] && this.updateImage(this.imgSecondary, images[1]);
+    }
 
-      // Update the secondary image
-      if (this.imgSecondary) {
-        this.imgSecondary.src = images[1] ? window.Utils.resizeImage(images[1].src, "100x") : "";
-        this.imgSecondary.srcset = images[1] ? window.Utils.generateImgSrcset(images[1].src, this.widths) : "";
-        this.imgSecondary.alt = images[1]?.alt ?? "";
-      }
+    updateImage(img: HTMLImageElement | null, imageData: ImageData) {
+      if (!img) return;
+      img.src = imageData ? window.Utils.resizeImage(imageData.src, "100x") : "";
+      img.srcset = imageData ? window.Utils.generateImgSrcset(imageData.src, this.widths) : "";
+      img.alt = imageData?.alt ?? "";
     }
   },
 );

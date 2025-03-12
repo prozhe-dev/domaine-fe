@@ -21,17 +21,18 @@ interface SwiperContainer extends HTMLElement {
 window.customElements.define(
   "section-slideshow",
   class SectionSlideshow extends HTMLElement {
+    section_id: string | undefined;
+    swiperEl: SwiperContainer | null = null;
+
     constructor() {
       super();
     }
 
-    section_id: string | undefined;
-    swiperEl: SwiperContainer | null = null;
-
-    /* ---------------------------------- HOOKS --------------------------------- */
+    /* -------------------------------- LIFECYCLE ------------------------------- */
     disconnectedCallback() {
       this.kill();
     }
+
     connectedCallback() {
       this.init();
     }
@@ -42,6 +43,7 @@ window.customElements.define(
 
       if (this.section_id) window[this.section_id] = { selected_index: 0 };
     }
+
     kill() {
       if (this.section_id) window[this.section_id] = null;
     }

@@ -15,6 +15,7 @@
         "image_NQzwmE": {
           "type": "Image",
           "settings": {
+<<<<<<< HEAD
             "image_landscape": "shopify://shop_images/hero.jpg",
             "show_overlay": false,
             "subheading": "Domaine",
@@ -22,6 +23,15 @@
             "body": "",
             "button_text_1": "Learn More",
             "button_url_1": "/",
+=======
+            "image_landscape": "shopify:\/\/shop_images\/hero.jpg",
+            "show_overlay": false,
+            "subheading": "Domaine",
+            "heading": "<p>We're purpose-built for <br\/>ambitious & beloved brands.<\/p>",
+            "body": "",
+            "button_text_1": "Learn More",
+            "button_url_1": "\/",
+>>>>>>> c6ae67a (misc refactoring)
             "button_text_2": "",
             "button_url_2": ""
           }
@@ -29,6 +39,7 @@
         "image_niJH9G": {
           "type": "Image",
           "settings": {
+<<<<<<< HEAD
             "image_landscape": "shopify://shop_images/Screenshot_2025-03-12_at_6.51.37_AM.png",
             "show_overlay": false,
             "subheading": "Domaine",
@@ -36,6 +47,15 @@
             "body": "",
             "button_text_1": "Learn More",
             "button_url_1": "/",
+=======
+            "image_landscape": "shopify:\/\/shop_images\/Screenshot_2025-03-12_at_6.51.37_AM.png",
+            "show_overlay": false,
+            "subheading": "Domaine",
+            "heading": "<p>The one-stop shop for <br\/>tech and everything else Shopify.<\/p>",
+            "body": "",
+            "button_text_1": "Learn More",
+            "button_url_1": "\/",
+>>>>>>> c6ae67a (misc refactoring)
             "button_text_2": "",
             "button_url_2": ""
           }

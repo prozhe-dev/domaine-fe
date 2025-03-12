@@ -4,16 +4,18 @@ interface ColorwaySwatchElement extends HTMLButtonElement {
   };
 }
 
+type ProductCardSlot = "images" | "info";
+
 window.customElements.define(
   "wc-product-card-colorways",
   class WCProductCardColorways extends HTMLElement {
+    swatchBtns: NodeListOf<HTMLButtonElement> | null = null;
+    handle: string | undefined = undefined;
+
     constructor() {
       super();
       this.onSwatchChange = this.onSwatchChange.bind(this);
     }
-
-    swatchBtns: NodeListOf<HTMLButtonElement> | null = null;
-    handle: string | undefined = undefined;
 
     /* -------------------------------- LIFECYCLE ------------------------------- */
     disconnectedCallback() {
@@ -41,7 +43,7 @@ window.customElements.define(
       // If the swatch is already active, do nothing
       if (!handle || this.dataset.handle === handle) return;
 
-      // Update the aria-selected attribute and dataset.selected for the swatch buttons
+      // Update the aria-selected attribute aZnd dataset.selected for the swatch buttons
       this.swatchBtns?.forEach((option) => {
         const selected = option === swatchBtn ? "true" : "false";
         option.dataset.selected = selected;
@@ -51,7 +53,7 @@ window.customElements.define(
       // Set the loading state
       this.dataset.loading = "true";
 
-      // Fetch the ssr product card
+      // Fetch and cache the ssr product card
       const { data, error } = await window.Utils.fatche(`/products/${handle}`, { view: "card" });
 
       // Reset the loading state
@@ -59,24 +61,28 @@ window.customElements.define(
 
       // If there is an error, return
       if (!data || error) {
-        console.error(error);
+        console.error(error); // TODO: Handle the error gracefully and show error indicator to the user
         return;
       }
 
       // update the handle
       this.dataset.handle = handle;
 
-      // Parse the html
-      const newProductCard = new DOMParser().parseFromString(data.html, "text/html");
-      const newProductCardImagesSlot = newProductCard.querySelector("[data-slot='images']");
-      const newProductCardInfoSlot = newProductCard.querySelector("[data-slot='info']");
+      // Render the product card
+      this.renderProductCard(data.html, ["images", "info"]);
+    }
 
-      const currentProductCardImagesSlot = this.querySelector("[data-slot='images']");
-      const currentProductCardInfoSlot = this.querySelector("[data-slot='info']");
+    renderProductCard(html: string, slots: ProductCardSlot[]) {
+      const newProductCard = new DOMParser().parseFromString(html, "text/html");
 
-      // replace the current card with the new card including itself
-      if (currentProductCardImagesSlot && newProductCardImagesSlot) currentProductCardImagesSlot.innerHTML = newProductCardImagesSlot.innerHTML;
-      if (currentProductCardInfoSlot && newProductCardInfoSlot) currentProductCardInfoSlot.innerHTML = newProductCardInfoSlot.innerHTML;
+      slots.forEach((slot) => {
+        const newSlot = newProductCard.querySelector(`[data-slot='${slot}']`);
+        const currentSlot = this.querySelector(`[data-slot='${slot}']`);
+
+        if (currentSlot && newSlot) {
+          currentSlot.innerHTML = newSlot.innerHTML;
+        }
+      });
     }
   },
 );

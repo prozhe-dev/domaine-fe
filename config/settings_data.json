@@ -9,7 +9,11 @@
  */
 {
   "current": {
+<<<<<<< HEAD
     "favicon": "shopify://shop_images/Domaine_Profile_Image.png",
+=======
+    "favicon": "shopify:\/\/shop_images\/Domaine_Profile_Image.png",
+>>>>>>> c6ae67a (misc refactoring)
     "font_primary": "roboto_n4",
     "font_secondary": "itc_franklin_gothic_n5",
     "sections": {
