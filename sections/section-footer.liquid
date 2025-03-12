@@ -1,0 +1,138 @@
+{%- assign footer_linklist = section.settings.footer_linklist -%}
+{%- assign legal_linklist = section.settings.legal_linklist -%}
+
+<section class="w-full overflow-hidden border-t border-secondary">
+  <div class="lazyload block w-full">
+    <div class="flex w-full flex-col gap-20 p-8 lg:flex-row">
+      {% comment %} /* ----------------------------- SUBSCRIBE FORM ----------------------------- */ {% endcomment %}
+      <div class="flex-center mr-auto size-full lg:max-w-[35rem]">
+        <my-form-subscribe class="group/my-form relative block w-full">
+          <div class="group-data-[status=success]/my-form:auto-alpha-0 w-full bg-primary transition-all duration-200">
+            <p class="mb-8 font-secondary text-5xl font-medium">{{ section.settings.subscribe_form_heading }}</p>
+
+            <form class="mt-4 flex size-full flex-col gap-8">
+              <div class="relative flex h-12 w-full items-center gap-1 border-b border-secondary group-data-[status=loading]/my-form:border-transparent">
+                {% comment %} /* ---------------------------------- EMAIL --------------------------------- */ {% endcomment %}
+                <div class="flex w-full">
+                  <input
+                    class="w-full flex-1 rounded-none bg-transparent font-medium outline-none transition-all [&+small]:multi-['absolute-tl;text-red-500;font-mono;uppercase;translate-y-[-100%];animate-[fade-up_0.3s_ease-out]']"
+                    type="text"
+                    name="email"
+                    rules="required|email"
+                    placeholder="Enter your email address"
+                  >
+                </div>
+
+                {% comment %} /* --------------------------------- SUBMIT --------------------------------- */ {% endcomment %}
+                <button type="submit" class="group/btn flex-center relative h-full font-medium transition-all hover:opacity-50">Subscribe</button>
+
+                {% comment %} /* --------------------------------- LOADING -------------------------------- */ {% endcomment %}
+                <div
+                  class="line-loader auto-alpha-0 group-data-[status=loading]/my-form:auto-alpha-1 absolute-bl h-[1px] w-full overflow-hidden bg-primary/20 transition-all after:multi-['size-full;bg-primary;absolute-tl']"
+                ></div>
+              </div>
+
+              {% comment %} /* -------------------------------- ERROR ALERT ------------------------------- */ {% endcomment %}
+              <div data-alert class="hidden font-medium text-red-400 group-data-[status=error]/my-form:multi-['block;animate-[fade-up_0.3s_ease-out]']"></div>
+
+              {% comment %} /* ------------------------------- SUCCESS ALERT ------------------------------ */ {% endcomment %}
+              <div class="hidden font-medium group-data-[status=success]/my-form:multi-['block;animate-[fade-up_0.3s_ease-out]']">You are in!</div>
+            </form>
+          </div>
+        </my-form-subscribe>
+      </div>
+
+      <div class="flex w-full flex-1 flex-col justify-around gap-8 border-secondary/20 font-medium lg:flex-row">
+        {% comment %} /* ---------------------------------- LINKS --------------------------------- */ {% endcomment %}
+        {% if linklists[footer_linklist].links.size > 0 %}
+          {% for link in linklists[footer_linklist].links %}
+            <div class="lg:max-w-[25rem]">
+              <p class="relative mb-4">{{ link.title }}</p>
+
+              {% for linkl2 in link.links %}
+                <a class="block py-1 opacity-80 transition-all hover-supported:hover:opacity-50" href="{{ linkl2.url }}">
+                  {{ linkl2.title }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endfor %}
+
+          {% comment %} /* ---------------------------------- SOCIAL --------------------------------- */ {% endcomment %}
+          <div class="from-desktop:max-w-[25rem]">
+            <p class="relative mb-4">Social</p>
+            {% for link in shop.brand.metafields.social_links %}
+              {%- assign platform_name = link[0] -%}
+              {%- assign platform_link = link[1] -%}
+
+              <a class="block py-1 capitalize opacity-80 transition-all hover-supported:hover:opacity-50" href="{{ platform_link }}" title="{{ platform_name }}">
+                {{ platform_name }}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% comment %} /* ---------------------------------- CONTACT --------------------------------- */ {% endcomment %}
+        <div class="lg:max-w-[25rem]">
+          <p class="relative mb-4">Contact</p>
+
+          <a href="https://maps.app.goo.gl/w8vHyCS816upHBqh8" target="_blank" title="Our Address" class="block py-1 opacity-80 transition-all hover-supported:hover:opacity-50">
+            620 King St W, <br>
+            Toronto, ON M5V 1M7
+          </a>
+
+          <a href="mailto:hello@{{ shop.name | handle }}.com" title="Email Us" class="block py-1 opacity-80 transition-all hover-supported:hover:opacity-50"> hello@{{ shop.name | handle }}.com </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex w-full flex-col items-center justify-between gap-4 px-8 py-4 font-mono text-[8px] font-medium uppercase lg:flex-row">
+      {% comment %} /* ---------------------------------- LEGAL --------------------------------- */ {% endcomment %}
+      {% if linklists[legal_linklist].links.size > 0 %}
+        <div class="flex-center flex-wrap">
+          {% for link in linklists[legal_linklist].links %}
+            <a class="whitespace-nowrap px-1 opacity-50 transition-all hover-supported:hover:opacity-80" href="{{ link.url }}">{{ link.title }}</a>
+            {%- unless forloop.last -%}
+              <small class="opacity-50">•</small>
+            {%- endunless -%}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <span class="opacity-50">&copy; {{ 'now' | date: '%Y' }} • {{ shop.name | upcase }} • All Rights Reserved </span>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "tag": "footer",
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Link Lists"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_linklist",
+      "label": "Footer Links",
+      "default": "footer"
+    },
+    {
+      "type": "link_list",
+      "id": "legal_linklist",
+      "label": "Legal Links"
+    },
+    {
+      "type": "header",
+      "content": "Susbscribe Form Settings"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_form_heading",
+      "label": "Subscribe Form Heading",
+      "default": "Join the conversation."
+    }
+  ]
+}
+{% endschema %}

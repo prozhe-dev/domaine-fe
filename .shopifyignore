@@ -1,0 +1,15 @@
+src/
+node_modules/
+*.zip
+
+package.json
+package-lock.json
+tailwind.config.json
+vite.config.ts
+tsconfig.json
+shopify.theme.toml
+.theme-check.yml
+
+.prettierrc.json
+.gitignore
+

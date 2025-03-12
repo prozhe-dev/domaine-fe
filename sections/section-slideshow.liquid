@@ -1,0 +1,201 @@
+<section-slideshow class="relative block h-svh w-full overflow-hidden bg-primary" data-section-id="{{ section.id }}">
+  <swiper-container
+    class="size-full"
+    effect="fade"
+    mousewheel-force-to-axis="true"
+    grab-cursor="true"
+    autoplay="{{ section.settings.autoplay_check | json }}"
+    loop="{{ section.settings.loop_check | json }}"
+  >
+    {%- for block in section.blocks -%}
+      {%- assign image_landscape = block.settings.image_landscape -%}
+      {%- assign image_portrait = block.settings.image_portrait -%}
+
+      {%- assign has_copy_items = block.settings.subheading
+        | default: block.settings.heading
+        | default: block.settings.body
+        | default: block.settings.button_text_1
+        | default: block.settings.button_text_2
+        | default: null
+      -%}
+
+      <swiper-slide data-swiper-autoplay="4000" data-block-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        <div class="size-full overflow-hidden bg-primary">
+          {% comment %} /* ---------------------------- RESPONSIVE IMAGES --------------------------- */ {% endcomment %}
+          <div class="absolute inset-0">
+            {%- if image_landscape or image_portrait -%}
+              <picture>
+                {%- if image_portrait -%}
+                  <source media="(max-width: 1023px)" srcset="{%- render 'util', name: 'img-srcset', image: image_portrait, widths: '360, 414, 768' -%}">
+                {%- endif -%}
+                {%- if image_landscape -%}
+                  <source media="(min-width: 1024px)" srcset="{%- render 'util', name: 'img-srcset', image: image_landscape, widths: '360, 414, 768, 1366, 1536, 1920, 2560' -%}">
+                {%- endif -%}
+                <img
+                  class="absolute left-0 top-0 z-[1] h-full w-full object-cover"
+                  src="{{ image_portrait | default: image_landscape | image_url: width: 1000 }}"
+                  alt="{{ image_portrait.alt | default: image_landscape.alt }}"
+                  loading="lazy"
+                  decoding="async"
+                  sizes="100vw"
+                >
+              </picture>
+            {%- endif -%}
+          </div>
+
+          {% comment %} /* -------------------------------- OVERYLAY -------------------------------- */ {% endcomment %}
+          {%- if block.settings.show_overlay -%}
+            <div class="pointer-events-none absolute inset-0 bg-black/10"></div>
+          {%- endif -%}
+
+          {% comment %} /* -------------------------------- COPY -------------------------------- */ {% endcomment %}
+          {%- if has_copy_items -%}
+            <div class="till-phone:w-full absolute bottom-0 left-0 z-[2] flex max-w-full flex-col items-start gap-4 p-10 text-left text-white">
+              {%- if block.settings.subheading != blank -%}
+                <p class="text-lg font-medium">{{ block.settings.subheading }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.heading != blank -%}
+                <h2 class="font-secondary text-5xl">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+
+              {%- if block.settings.body != blank -%}
+                <div class="text-lg font-medium">{{ block.settings.body }}</div>
+              {%- endif -%}
+
+              {%- if block.settings.button_text_1 != blank or block.settings.button_text_2 != blank -%}
+                <div class="flex flex-wrap gap-4">
+                  {%- if block.settings.button_text_1 != blank -%}
+                    <a href="{{ block.settings.button_url_1 }}" class="whitespace-nowrap rounded-full bg-primary px-6 py-2 font-medium text-primary-foreground transition-all hover-supported:hover:opacity-80">
+                      {{- block.settings.button_text_1 -}}
+                    </a>
+                  {%- endif -%}
+                  {%- if block.settings.button_text_2 != blank -%}
+                    <a href="{{ block.settings.button_url_2 }}" class="whitespace-nowrap rounded-full bg-primary px-6 py-2 font-medium text-primary-foreground transition-all hover-supported:hover:opacity-80">
+                      {{- block.settings.button_text_2 -}}
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </swiper-slide>
+    {%- endfor -%}
+  </swiper-container>
+</section-slideshow>
+
+{% schema %}
+{
+  "tag": "section",
+  "name": "Slideshow",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Slideshow Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_check",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_check",
+      "label": "Loop",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "Image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Background Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_landscape",
+          "label": "Landscape Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_portrait",
+          "label": "Portrait Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overlay",
+          "label": "Show a very subtle overlay to increase contrast",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Copy"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Sub Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        },
+        {
+          "type": "header",
+          "content": "Button 1"
+        },
+        {
+          "type": "text",
+          "id": "button_text_1",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_url_1",
+          "label": "Button URL "
+        },
+        {
+          "type": "header",
+          "content": "Button 2"
+        },
+        {
+          "type": "text",
+          "id": "button_text_2",
+          "label": "Button Text"
+        },
+        {
+          "type": "url",
+          "id": "button_url_2",
+          "label": "Button URL "
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "blocks": [
+        {
+          "type": "Image"
+        },
+        {
+          "type": "Image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

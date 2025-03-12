@@ -1,0 +1,11 @@
+{% layout none %}
+
+{%- capture html -%}
+  {%- render 'wc-product-card-colorways', product: product -%}
+{%- endcapture -%}
+
+{ 
+  "id": {{ product.id | json }},
+  "handle": {{ product.handle | json }},
+  "html": {{ html | json }}
+}

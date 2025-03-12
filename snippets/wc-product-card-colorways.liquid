@@ -1,0 +1,113 @@
+{%- assign widths = '200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000' -%}
+
+{%- assign names = product.title | split: ' - ' -%}
+
+<wc-product-card-colorways class="group/product-card relative flex w-full flex-col gap-4 data-[loading=true]:pointer-events-none" data-handle="{{ product.handle }}">
+  <div data-slot="images" class="group/product-card-images relative w-full overflow-hidden rounded-lg border group-data-[loading=true]/product-card:animate-[pulse_0.5s_ease-in-out_infinite]" style="padding-top: 108%;">
+    {% comment %} /* --------------------------------- IMAGES --------------------------------- */ {% endcomment %}
+    <a class="absolute inset-0" href="{{ product.url }}" title="{{ product.title }}" aria-label="{{ product.title }}">
+      {%- if product.featured_image != blank -%}
+        <div class="absolute inset-0 bg-background">
+          <img
+            data-slot="image-primary"
+            class="size-full object-cover"
+            data-widths="{{ widths }}"
+            srcset="{%- render 'util', name: 'img-srcset', image: product.featured_image, widths: widths -%}"
+            src="{{ product.featured_image | image_url: width: 100 }}"
+            alt="{{ product.featured_image.alt | escape }}"
+            sizes="(min-width: 1024px) 25vw, 50vw"
+            decoding="async"
+            loading="lazy"
+            width="100"
+          >
+        </div>
+      {%- endif -%}
+
+      {%- if product.images[1] != blank -%}
+        <div class="auto-alpha-0 hover-supported:group-hover/product-card-images:auto-alpha-1 absolute inset-0 bg-background transition-all">
+          <img
+            data-slot="image-secondary"
+            class="size-full object-cover"
+            data-widths="{{ widths }}"
+            srcset="{%- render 'util', name: 'img-srcset', image: product.images[1], widths: widths -%}"
+            src="{{ product.images[1] | image_url: width: 100 }}"
+            alt="{{ product.images[1].alt | escape }}"
+            sizes="(min-width: 1024px) 25vw, 50vw"
+            decoding="async"
+            loading="lazy"
+            width="100"
+          >
+        </div>
+      {%- endif -%}
+    </a>
+
+    {% comment %} /* ---------------------------------- BADGE --------------------------------- */ {% endcomment %}
+    {%- if product.compare_at_price > product.price and product.available -%}
+      <span class="border-discount text-discount absolute left-8 top-8 rounded-full border px-3 py-1 font-secondary text-lg font-medium">{{ 'products.product.on_sale' | t }}</span>
+    {%- endif -%}
+  </div>
+
+  {% comment %} /* --------------------------------- LOADING -------------------------------- */ {% endcomment %}
+  <div
+    class="absolute-center auto-alpha-0 group-data-[loading=true]/product-card:auto-alpha-1 pointer-events-none h-[1px] w-1/4 max-w-10 overflow-hidden bg-secondary/20 transition-all group-data-[loading=true]/product-card:after:multi-['bg-secondary;absolute;inset-0;animate-[line-loader_1.5s_ease-in-out_infinite]']"
+  ></div>
+
+  <div class="flex w-full flex-col gap-4">
+    {% comment %} /* -------------------------------- SWATCHES -------------------------------- */ {% endcomment %}
+    {%- if product.metafields.custom.colorways.values_count != 0 -%}
+      <div class="flex flex-wrap gap-2">
+        {%- assign swatch = product.metafields.shopify['color-pattern'].value | first -%}
+
+        <button
+          aria-selected="true"
+          data-selected="true"
+          data-handle="{{ product.handle }}"
+          style="background: {%- render 'util', name: 'swatch-bg', swatch: swatch -%};"
+          role="radio"
+          type="button"
+          class="swatch relative size-8 rounded-full bg-cover bg-center bg-origin-border outline outline-offset-2 transition-all data-[selected=false]:outline-transparent data-[selected=true]:outline-secondary hover-supported:hover:outline-secondary"
+        ></button>
+
+        {%- for colorway in product.metafields.custom.colorways.value -%}
+          {%- assign swatch = colorway.metafields.shopify['color-pattern'].value | first -%}
+          <button
+            aria-selected="false"
+            data-selected="false"
+            data-images="{{ product_images | strip_newlines | strip | escape | remove: '  ' }}"
+            data-handle="{{ colorway.handle }}"
+            style="background: {%- render 'util', name: 'swatch-bg', swatch: swatch -%};"
+            role="radio"
+            type="button"
+            class="swatch relative size-8 rounded-full bg-cover bg-center bg-origin-border outline outline-offset-2 transition-all data-[selected=false]:outline-transparent data-[selected=true]:outline-secondary hover-supported:hover:outline-secondary"
+          ></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div data-slot="info" class="flex w-full flex-col gap-1 group-data-[loading=true]/product-card:animate-[pulse_0.5s_ease-in-out_infinite]">
+      {% comment %} /* ---------------------------------- BRAND --------------------------------- */ {% endcomment %}
+      <span class="text-sm">{{ product.vendor }}</span>
+
+      {% comment %} /* ---------------------------------- TITLE --------------------------------- */ {% endcomment %}
+      <a class="font-medium text-accent" href="{{ product.url }}">
+        <span>{{ names[0] }}</span>
+        {%- if names[1] != blank -%}
+          <br>
+          <span class="text-sm">{{ names[1] }}</span>
+        {%- endif -%}
+      </a>
+
+      {% comment %} /* --------------------------------- PRICING -------------------------------- */ {% endcomment %}
+      <div class="flex gap-2">
+        {%- if product.compare_at_price > product.price -%}
+          <span class="text-sm line-through">{{ product.compare_at_price | money }}</span>
+          <span class="text-discount text-sm font-medium">{{ product.price | money }}</span>
+        {%- elsif product.price_varies -%}
+          <span class="text-sm font-medium">{{ 'products.product.from_price_html' | t: price: product.price_min | money }}</span>
+        {%- else -%}
+          <span class="text-sm font-medium">{{ product.price | money }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</wc-product-card-colorways>

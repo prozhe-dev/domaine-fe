@@ -1,0 +1,12 @@
+{%- assign font_primary = settings.font_primary -%}
+{%- assign font_secondary = settings.font_secondary -%}
+
+{% style %}
+  {{ font_primary | font_face: font_display: 'swap' }}
+  {{ font_secondary | font_face: font_display: 'swap' }}
+
+  :root{
+    --font-primary: {{ font_primary.family }}, {{ font_primary.fallback_families }};
+    --font-secondary: {{ font_secondary.family }}, {{ font_secondary.fallback_families }};
+  }
+{% endstyle %}

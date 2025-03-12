@@ -1,0 +1,38 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Domaine Dev Rez",
+    "theme_version": "1.0.0",
+    "theme_author": "Rez Jam",
+    "theme_documentation_url": "https://rez.prozhe.dev",
+    "theme_support_url": "https://rez.prozhe.dev"
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Will be scaled down to 32 x 32px"
+      }
+    ]
+  },
+  {
+    "name": "Typeface",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_primary",
+        "label": "Primary font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_secondary",
+        "label": "Secondary font",
+        "default": "assistant_n4"
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+{%- case name -%}
+  {%- when 'img-srcset' -%}
+    {%- if widths != blank and image != blank -%}
+      {%- assign widths = widths | split: ',' -%}
+
+      {%- capture srcset -%}
+        {%- for width in widths -%}
+          {{ image | image_url: width: width }} {{ width }}w {%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      {{ srcset | strip }}
+    {%- endif -%}
+
+  {%- when 'swatch-bg' -%}
+    {%- if swatch != blank -%}
+      {%- assign swatch_bg = null -%}
+      {%- if swatch.image -%}
+        {%- assign swatch_bg_img = swatch.image | image_url: width: 50 -%}
+        {%- assign swatch_bg = 'url(' | append: swatch_bg_img | append: ')' -%}
+      {%- elsif swatch.color -%}
+        {%- assign swatch_bg = swatch.color -%}
+      {%- endif -%}
+      {{ swatch_bg }}
+    {%- endif -%}
+{%- endcase -%}

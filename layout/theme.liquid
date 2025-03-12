@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" class="group/html" data-template="{{ template.name | handle }}">
+  <head>
+    {%- render 'meta' -%}
+    {{ content_for_header }}
+
+    {%- render 'liquid-css' -%}
+    <link rel="stylesheet" href="{{ "theme.css" | asset_url }}">
+
+    <script defer src="{{'theme.js' | asset_url}}"></script>
+    <script defer src="{{'wc-product-card-variants.js' | asset_url }}"></script>
+    <script defer src="{{'wc-product-card-colorways.js' | asset_url }}"></script>
+    <script defer src="{{'wc-section-slideshow.js' | asset_url }}"></script>
+    <script defer src="{{'swiper-element@11.2.5.min.js' | asset_url}}"></script>
+    {%- if request.design_mode -%}
+      <script defer src="{{'shopify-desigmode.js' | asset_url }}"></script>
+    {%- endif -%}
+  </head>
+
+  <body id="{{ page_title | handle }}" class="group/body" data-page-type="{{ page.template_suffix }}" data-page-handle="{{ page.handle }}">
+    <a class="sr-only" href="#main-content">{{ 'accessibility.skip_to_text' | t }}</a>
+
+    {% section 'section-header' %}
+
+    <main role="main" id="main-content" class="min-h-svh">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'section-footer' %}
+  </body>
+</html>

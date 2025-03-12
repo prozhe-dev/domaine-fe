@@ -1,0 +1,106 @@
+{%- assign variant = product.selected_or_first_available_variant -%}
+{%- assign image_primary = variant.metafields.custom.images.value | first | default: variant.featured_image -%}
+{%- assign image_secondary = variant.metafields.custom.images.value | last -%}
+
+{%- assign widths = '200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000' -%}
+
+<wc-product-card-variants class="group/product-card flex w-full flex-col gap-4">
+  <div class="group/product-card-images relative w-full overflow-hidden rounded-lg border" style="padding-top: 108%;">
+    {% comment %} /* --------------------------------- IMAGES --------------------------------- */ {% endcomment %}
+    <a class="absolute inset-0" href="{{ product.url }}" title="{{ product.title }}" aria-label="{{ product.title }}">
+      <div class="absolute inset-0 bg-background">
+        <img
+          data-slot="image-primary"
+          class="size-full object-cover"
+          data-widths="{{ widths }}"
+          srcset="{%- render 'util', name: 'img-srcset', image: image_primary, widths: widths -%}"
+          src="{{ image_primary | image_url: width: 100 }}"
+          alt="{{ image_primary.alt | escape }}"
+          sizes="(min-width: 1024px) 25vw, 50vw"
+          decoding="async"
+          loading="lazy"
+          width="100"
+        >
+      </div>
+
+      <div class="auto-alpha-0 hover-supported:group-hover/product-card-images:auto-alpha-1 absolute inset-0 bg-background transition-all">
+        <img
+          data-slot="image-secondary"
+          class="size-full object-cover"
+          data-widths="{{ widths }}"
+          srcset="{%- render 'util', name: 'img-srcset', image: image_secondary, widths: widths -%}"
+          src="{{ image_secondary | image_url: width: 100 }}"
+          alt="{{ image_secondary.alt | escape }}"
+          sizes="(min-width: 1024px) 25vw, 50vw"
+          decoding="async"
+          loading="lazy"
+          width="100"
+        >
+      </div>
+    </a>
+
+    {% comment %} /* ---------------------------------- BADGE --------------------------------- */ {% endcomment %}
+    {%- if product.compare_at_price > product.price and product.available -%}
+      <span class="border-discount text-discount absolute left-8 top-8 rounded-full border px-3 py-1 font-secondary text-lg font-medium">{{ 'products.product.on_sale' | t }}</span>
+    {%- endif -%}
+  </div>
+
+  <div class="flex w-full flex-col gap-4">
+    {% comment %} /* -------------------------------- SWATCHES -------------------------------- */ {% endcomment %}
+    <div class="flex flex-wrap gap-2">
+      {%- for option in product.options_with_values -%}
+        {%- for value in option.values -%}
+          {%- if value.swatch -%}
+            {%- assign selected = false -%}
+            {%- if value.variant.id == variant.id -%}
+              {%- assign selected = true -%}
+            {%- endif -%}
+
+            {%- capture variant_images -%}
+              [
+                {%- for image in value.variant.metafields.custom.images.value -%}
+                  {
+                    "src": {{ image | json }},
+                    "alt": {{ image.alt | json }}
+                  }{%- unless forloop.last -%},{%- endunless -%}
+                {%- endfor -%}
+              ]
+            {%- endcapture -%}
+
+            <button
+              aria-selected="{{ selected }}"
+              data-selected="{{ selected }}"
+              data-images="{{ variant_images | strip_newlines | strip | escape | remove: '  ' }}"
+              data-variant-id="{{ value.variant.id }}"
+              data-swatch-id="{{ value.id }}"
+              style="background: {%- render 'util', name: 'swatch-bg', swatch: value.swatch -%};"
+              role="radio"
+              type="button"
+              class="swatch relative size-8 rounded-full bg-cover bg-center bg-origin-border outline outline-offset-2 transition-all data-[selected=false]:outline-transparent data-[selected=true]:outline-secondary hover-supported:hover:outline-secondary"
+            ></button>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="flex w-full flex-col gap-1">
+      {% comment %} /* ---------------------------------- BRAND --------------------------------- */ {% endcomment %}
+      <span class="text-sm">{{ product.vendor }}</span>
+
+      {% comment %} /* ---------------------------------- TITLE --------------------------------- */ {% endcomment %}
+      <a class="font-medium text-accent" href="{{ product.url }}">{{ product.title }}</a>
+
+      {% comment %} /* --------------------------------- PRICING -------------------------------- */ {% endcomment %}
+      <div class="flex gap-2">
+        {%- if product.compare_at_price > product.price -%}
+          <span class="text-sm line-through">{{ product.compare_at_price | money }}</span>
+          <span class="text-discount text-sm font-medium">{{ product.price | money }}</span>
+        {%- elsif product.price_varies -%}
+          <span class="text-sm font-medium">{{ 'products.product.from_price_html' | t: price: product.price_min | money }}</span>
+        {%- else -%}
+          <span class="text-sm font-medium">{{ product.price | money }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</wc-product-card-variants>

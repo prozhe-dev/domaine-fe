@@ -1,0 +1,5 @@
+DeprecateBgsizes:
+  enabled: false
+
+ImgWidthAndHeight:
+  enabled: false
