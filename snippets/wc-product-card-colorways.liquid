@@ -24,7 +24,7 @@
       {%- endif -%}
 
       {%- if product.images[1] != blank -%}
-        <div class="auto-alpha-0 hover-supported:group-hover/product-card-images:auto-alpha-1 absolute inset-0 bg-background transition-all">
+        <div class="auto-alpha-0 group-hover/product-card-images:auto-alpha-1 absolute inset-0 bg-background transition-all">
           <img
             data-slot="image-secondary"
             class="size-full object-cover"
@@ -43,7 +43,7 @@
 
     {% comment %} /* ---------------------------------- BADGE --------------------------------- */ {% endcomment %}
     {%- if product.compare_at_price > product.price and product.available -%}
-      <span class="border-discount text-discount absolute left-8 top-8 rounded-full border px-3 py-1 font-secondary text-lg font-medium">{{ 'products.product.on_sale' | t }}</span>
+      <span class="absolute left-8 top-8 rounded-full border border-discount px-3 py-1 font-secondary text-lg font-medium text-discount">{{ 'products.product.on_sale' | t }}</span>
     {%- endif -%}
   </div>
 
@@ -101,7 +101,7 @@
       <div class="flex gap-2">
         {%- if product.compare_at_price > product.price -%}
           <span class="text-sm line-through">{{ product.compare_at_price | money }}</span>
-          <span class="text-discount text-sm font-medium">{{ product.price | money }}</span>
+          <span class="text-sm font-medium text-discount">{{ product.price | money }}</span>
         {%- elsif product.price_varies -%}
           <span class="text-sm font-medium">{{ 'products.product.from_price_html' | t: price: product.price_min | money }}</span>
         {%- else -%}

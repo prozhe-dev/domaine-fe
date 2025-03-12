@@ -70,16 +70,27 @@ window.customElements.define(
       // Parse the images string into an array of objects
       const images = window.Utils.parseJSON(imagesStr ?? "[]") as ImageData[];
 
-      // Update both images
-      !!images[0] && this.updateImage(this.imgPrimary, images[0]);
-      !!images[1] && this.updateImage(this.imgSecondary, images[1]);
+      // Update primary and secondary images
+      [this.imgPrimary, this.imgSecondary].forEach((img, i) => {
+        const imageData = images[i];
+        const imageContainer = img?.parentElement;
+
+        if (imageData && imageContainer) {
+          this.updateImage(img, imageData);
+          imageContainer.classList.remove("hidden");
+        } else if (imageContainer) {
+          imageContainer.classList.add("hidden");
+        }
+      });
     }
 
     updateImage(img: HTMLImageElement | null, imageData: ImageData) {
       if (!img) return;
-      img.src = imageData ? window.Utils.resizeImage(imageData.src, "100x") : "";
-      img.srcset = imageData ? window.Utils.generateImgSrcset(imageData.src, this.widths) : "";
-      img.alt = imageData?.alt ?? "";
+
+      const { src, alt = "" } = imageData;
+      img.src = window.Utils.resizeImage(src, "100x");
+      img.srcset = window.Utils.generateImgSrcset(src, this.widths);
+      img.alt = alt;
     }
   },
 );
