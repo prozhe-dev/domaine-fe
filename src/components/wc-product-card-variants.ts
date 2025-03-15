@@ -7,7 +7,7 @@ interface VariantSwatchOption extends HTMLButtonElement {
   };
 }
 
-interface ImageData {
+interface VariantImageData {
   src: string;
   alt: string;
 }
@@ -42,40 +42,40 @@ window.customElements.define(
 
       this.widths = this.imgPrimary?.dataset.widths?.split(",").map((width) => width.trim()) ?? [];
 
-      this.swatchBtns?.forEach((option) => option.addEventListener("click", this.onSwatchChange));
+      this.swatchBtns?.forEach((swatchBtn) => swatchBtn.addEventListener("click", this.onSwatchChange));
     }
 
     kill() {
-      this.swatchBtns?.forEach((option) => option.removeEventListener("click", this.onSwatchChange));
+      this.swatchBtns?.forEach((swatchBtn) => swatchBtn.removeEventListener("click", this.onSwatchChange));
     }
 
     /* -------------------------------- METHODS -------------------------------- */
     onSwatchChange(e: MouseEvent) {
-      const swatchBtn = e.target as VariantSwatchOption;
-      const { images: imagesStr, swatchId } = swatchBtn.dataset;
+      const selectedSwatchBtn = e.target as VariantSwatchOption;
+      const { images: imagesStr, swatchId } = selectedSwatchBtn.dataset;
 
       // If the swatch is already active, do nothing
-      if (!swatchId || this.activeSwatchId === swatchId) return;
+      if (!imagesStr || !swatchId || this.activeSwatchId === swatchId) return;
 
       // Update the active swatch
       this.activeSwatchId = swatchId;
 
       // Update the aria-selected attribute and dataset.selected for the swatch buttons
-      this.swatchBtns?.forEach((option) => {
-        const selected = option === swatchBtn ? "true" : "false";
-        option.dataset.selected = selected;
-        option.setAttribute("aria-selected", selected);
+      this.swatchBtns?.forEach((swatchBtn) => {
+        const isSelected = swatchBtn === selectedSwatchBtn;
+        swatchBtn.dataset.selected = isSelected ? "true" : "false";
+        swatchBtn.setAttribute("aria-selected", isSelected ? "true" : "false");
       });
 
       // Parse the images string into an array of objects
-      const images = window.Utils.parseJSON(imagesStr ?? "[]") as ImageData[];
+      const images = window.Utils.parseJSON(imagesStr, []) as VariantImageData[];
 
       // Update primary and secondary images
       [this.imgPrimary, this.imgSecondary].forEach((img, i) => {
         const imageData = images[i];
         const imageContainer = img?.parentElement;
 
-        if (imageData && imageContainer) {
+        if (imageData?.src && imageContainer) {
           this.updateImage(img, imageData);
           imageContainer.classList.remove("hidden");
         } else if (imageContainer) {
@@ -84,9 +84,7 @@ window.customElements.define(
       });
     }
 
-    updateImage(img: HTMLImageElement | null, imageData: ImageData) {
-      if (!img) return;
-
+    updateImage(img: HTMLImageElement, imageData: VariantImageData) {
       const { src, alt = "" } = imageData;
       img.src = window.Utils.resizeImage(src, "100x");
       img.srcset = window.Utils.generateImgSrcset(src, this.widths);

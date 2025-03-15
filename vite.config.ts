@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
+import { glob } from "fast-glob";
 import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
 import path from "path";
-import { glob } from "fast-glob";
 
 export default defineConfig({
   build: {
@@ -10,14 +10,8 @@ export default defineConfig({
     emptyOutDir: false,
     assetsDir: "",
     rollupOptions: {
-      input: {
-        theme: "src/theme.ts",
-        "theme.css": "src/theme.css",
-        ...Object.fromEntries(glob.sync("src/components/**/*").map((file) => [path.parse(file).name, file])),
-        ...Object.fromEntries(glob.sync("src/libs/**/*").map((file) => [path.parse(file).name, file])),
-      },
+      input: ["src/theme.ts", "src/theme.css", ...glob.sync(["src/components/**/*", "src/libs/**/*"])],
       output: {
-        dir: "assets",
         entryFileNames: "[name].js",
         assetFileNames: "[name].[ext]",
       },

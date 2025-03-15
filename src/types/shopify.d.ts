@@ -6,8 +6,6 @@ declare global {
       designMode: boolean;
       moneyFormat: string;
     };
-    pending_requests: Map<string, Promise<any>>;
-    fetch_cache: Map<string, any>;
     Utils: typeof Utils;
     [key: string]: any;
   }

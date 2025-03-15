@@ -28,26 +28,26 @@ window.customElements.define(
 
     init() {
       this.swatchBtns = this.querySelectorAll("button.swatch");
-      this.swatchBtns?.forEach((option) => option.addEventListener("click", this.onSwatchChange));
+      this.swatchBtns?.forEach((swatchBtn) => swatchBtn.addEventListener("click", this.onSwatchChange));
     }
 
     kill() {
-      this.swatchBtns?.forEach((option) => option.removeEventListener("click", this.onSwatchChange));
+      this.swatchBtns?.forEach((swatchBtn) => swatchBtn.removeEventListener("click", this.onSwatchChange));
     }
 
     /* -------------------------------- METHODS -------------------------------- */
     async onSwatchChange(e: MouseEvent) {
-      const swatchBtn = e.target as ColorwaySwatchElement;
-      const { handle } = swatchBtn.dataset;
+      const selectedSwatchBtn = e.target as ColorwaySwatchElement;
+      const { handle } = selectedSwatchBtn.dataset;
 
       // If the swatch is already active, do nothing
       if (!handle || this.dataset.handle === handle) return;
 
-      // Update the aria-selected attribute aZnd dataset.selected for the swatch buttons
-      this.swatchBtns?.forEach((option) => {
-        const selected = option === swatchBtn ? "true" : "false";
-        option.dataset.selected = selected;
-        option.setAttribute("aria-selected", selected);
+      // Update the aria-selected attribute and dataset.selected for the swatch buttons
+      this.swatchBtns?.forEach((swatchBtn) => {
+        const isSelected = swatchBtn === selectedSwatchBtn;
+        swatchBtn.dataset.selected = isSelected ? "true" : "false";
+        swatchBtn.setAttribute("aria-selected", isSelected ? "true" : "false");
       });
 
       // Set the loading state
@@ -65,15 +65,15 @@ window.customElements.define(
         return;
       }
 
-      // update the handle
+      // Update the handle
       this.dataset.handle = handle;
 
       // Render the product card
-      this.renderProductCard(data.html, ["images", "info"]);
+      this.renderToProductCardSlots(data.html, ["images", "info"]);
     }
 
-    renderProductCard(html: string, slots: ProductCardSlot[]) {
-      const newProductCard = new DOMParser().parseFromString(html, "text/html");
+    renderToProductCardSlots(html: string, slots: ProductCardSlot[]) {
+      const newProductCard = window.Utils.domParser.parseFromString(html, "text/html");
 
       slots.forEach((slot) => {
         const newSlot = newProductCard.querySelector(`[data-slot='${slot}']`);

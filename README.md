@@ -11,16 +11,15 @@ This project demonstrates an innovative approach to product card implementations
 1. **Solution 1: Variant Colorways**
 
    - Colorways are implemented as Shopify product variants using the Color option
-   - Each variant has custom metafields storing colorway-specific images
-   - Uses a dedicated `shopify.color-pattern` metaobject to manage swatch colors and patterns
-   - Best suited for products with limited color variations
-   - Maintains all colorways within a single product for simpler inventory management
+   - Color option is linked with the Color product metafield (`shopify.color-pattern` metaobjects store swatch data such as hex codes, patterns, etc)
+   - Each variant has custom metafield called `images` storing colorway-specific images (`variant.metafields.custom.images`)
+   - Best suited for products with limited color variations and product media as Shopify has limits on the number of variants and product media
 
 2. **Solution 2: Product Colorways**
    - Colorways are implemented as separate but related Shopify products
-   - Products are associated using a shared tag system (e.g., `sid:123`)
-   - Each product maintains its own inventory, media (images, videos, 3D models), url, tags, status, description, and metadata
-   - Highly scalable approach that simplifies product management
+   - Products are associated using a shared tag system (e.g., `sid:123`, `style-id:123` or `product-group:123`)
+   - Each product maintains its own inventory, media (images, videos, 3D models), url, tags, status, state, description, and metadata
+   - Highly scalable approach that simplifies product/colorway management
    - Automated relationship management via Shopify Flow (e.g., `flow/set-colorways-metafields.flow`)
    - Ideal for products with extensive colorway options
    - Enables independent tracking of colorway-specific analytics and state
@@ -42,8 +41,8 @@ src/
 ├── styles/        # Custom styles and animations
 ├── types/         # TypeScript type definitions
 └── utils/         # Utility functions and helpers
-└── theme.ts       # Entry point for build process
-└── theme.css      # Entry point for build process
+└── theme.ts       # Globally shared Shopify theme configuration
+└── theme.css      # Globally shared Shopify theme styles
 ```
 
 ## Getting Started
@@ -51,13 +50,13 @@ src/
 1. Clone the repository:
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/prozhe-dev/domaine-fe.git
 ```
 
 2. Install dependencies:
 
 ```bash
-npm install
+npm i
 ```
 
 3. Start Vite:
@@ -84,9 +83,9 @@ This minimal implementation showcases modern frontend development practices:
 
 ## Implementation Note
 
-This repository has been intentionally stripped down to its essential components, focusing solely on demonstrating a basic approach to data fetching and mutation using native browser APIs and Shopify's custom product templates (`templates/product.card.liquid`) for JSON responses. While functional, it serves primarily as a proof of concept.
+This repository has been intentionally kept super minimal and native (without heavily relying on other external frontend libraries/frameworks)—just the essentials to make reviewing easier, so some typical theme files aren’t included.
 
-For production implementations, consider using modern frameworks/libraries such as:
+For production implementations, consider using modern frontend libraries/frameworks such as:
 
 - Hydrogen - Shopify's React framework (Remix.js)
 - Alpine.js - Lightweight framework perfect for Shopify themes
